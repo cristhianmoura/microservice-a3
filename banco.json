@@ -1,0 +1,31 @@
+{
+    "banco": [
+      {
+        "nome": "Cristhian",
+        "idade": "55",
+        "tipo": "paciente"
+      },
+      {
+        "nome": "Natalia",
+        "idade": "32",
+        "tipo": "paciente"
+      },
+      {
+        "nome": "Paulo",
+        "idade": "20",
+        "tipo": "médico"
+      },
+      {
+        "nome": "João",
+        "idade": "26",
+        "tipo": "médico"
+      },
+      {
+        "nome": "Renata",
+        "idade": "20",
+        "tipo": "paciente"
+        
+      }
+    ]
+  }
+  
