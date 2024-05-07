@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"menu/initializers"
 	"net/http"
 
 	"os"
@@ -9,12 +10,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func init() {
+	initializers.LoadVariables()
+}
+
 func loadData() []byte {
 
 	jsonFile, err := os.Open("banco.json")
 	if err != nil {
 		fmt.Println("erro: ", err.Error())
-
 	}
 	defer jsonFile.Close()
 
