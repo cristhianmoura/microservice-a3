@@ -11,24 +11,25 @@ import (
 
 func loadData() []byte {
 
-	jsonFile, err := os.Open("products.json")
+	jsonFile, err := os.Open("banco.json")
 	if err != nil {
 		fmt.Println("erro: ", err.Error())
 
 	}
 	defer jsonFile.Close()
 
-	data, err := os.ReadFile("products.json")
+	data, err := os.ReadFile("banco.json")
 	return data
 }
-func ListProducts(w http.ResponseWriter, r *http.Request) {
+func ListUsers(w http.ResponseWriter, r *http.Request) {
 
-	products := loadData()
+	banco := loadData()
 
-	w.Write([]byte(products))
+	w.Write([]byte(banco))
 }
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/products", ListProducts)
+	r.HandleFunc("/users", ListUsers)
+
 	http.ListenAndServe(":8081", r)
 }
