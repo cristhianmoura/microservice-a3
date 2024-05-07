@@ -7,6 +7,6 @@ func init() {
 	//initializers.ConnectDB()
 }
 
-func main() {
+func main() { //função para fazer a conexão do banco de dados com o serviço
 	//initializers.DB.AutoMigrate(&model.Post{}})
 }
