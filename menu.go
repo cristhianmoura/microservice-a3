@@ -1,38 +1,62 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"menu/initializers"
+	_ "html/template"
 	"net/http"
+	_ "net/http"
 
-	"os"
-
-	"github.com/gorilla/mux"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-func init() {
-	initializers.LoadVariables() //carregando as variáveis do banco de dados assim que o serviço for iniciado
-}
-
-func loadData() []byte { //iniciando o microserviço
-
-	jsonFile, err := os.Open("banco.json")
+func main() {
+	db, err := sql.Open("mysql", "root:601220@tcp(localhost:3306)/microservice")
 	if err != nil {
-		fmt.Println("erro: ", err.Error()) //retorna erro caso algo dê errado
+		fmt.Println("Erro na validação do sql.Open")
+		panic(err.Error())
 	}
-	defer jsonFile.Close()
+	defer db.Close()
+	http.HandleFunc("/productsearch", productSearchHandler)
+	http.HandleFunc("/", homePageHandler)
+	http.ListenAndServe("localhost:8080", nil)
 
-	data, err := os.ReadFile("banco.json")
-	return data //processa os dados do banco(que por enquanto está sendo um arquivo .json)
-}
-func ListUsers(w http.ResponseWriter, r *http.Request) { //lista e imprime na tela as informações desse banco temporário
-	banco := loadData()
 
-	w.Write([]byte(banco))
-}
-func main() { //essa função é um direcionamento para localizar o serviço
-	r := mux.NewRouter()
-	r.HandleFunc("/users", ListUsers)
+	func productSearchHandler(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" {
+			tp1.ExecuteTemplate(w, "productsearch.html", nil)
+			return
+		}
+		r.ParseForm()
+		var P Product
+		name := r.FormValue("productName")
+		fmt.Println("name", name)
 
-	http.ListenAndServe(":8081", r)
+		stmt := "SELECT * FROM products WHERE name = ?;"
+
+		row := db.QueryRow(stmt, name)
+
+		err := row.Scan(&P.ID, &P.Name, &P.Price, &P.Description)
+		if err != nil {
+			panic(err)
+		}
+		tp1.ExecuteTemplate(w, "productsearch.html", P)
+	}
+	
+	func homePageHandler2(w http.ResponseWriter, r *http.Request) {
+
+	}
+	err = db.Ping()
+	if err != nil {
+		fmt.Println("Erro na conexão com Ping")
+		panic(err.Error())
+	}
+	//insert, err := db.Query("INSERT INTO 'microservice' , 'pacientes' ('codigo', 'nome', 'idade') VALUES ('2', 'Cristhian', '20');")
+	//if err != nil {
+	//panic(err.Error())
+	//}
+
+	//defer insert.Close()
+
+	fmt.Println("Sucesso na conexão com o banco de dados ")
 }
